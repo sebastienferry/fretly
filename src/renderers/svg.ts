@@ -50,9 +50,9 @@ export class SvgRenderer {
 
     // Render components
     if (isHorizontal) {
-      this.renderHorizontal(strings, frets, inlays, markers, svg);
+      this.renderHorizontal(strings, frets, inlays, markers, svg, width, height);
     } else {
-      this.renderVertical(strings, frets, inlays, markers, svg);
+      this.renderVertical(strings, frets, inlays, markers, svg, width, height);
     }
 
     return svg;
@@ -79,19 +79,21 @@ export class SvgRenderer {
     frets: Fret[],
     inlays: Inlay[],
     markers: MarkerInterface[],
-    svg: SVGSVGElement
+    svg: SVGSVGElement,
+    width: number,
+    height: number
   ): void {
     // Render strings (horizontal lines spanning fretboard width)
     const stringsGroup = this.createGroup(CSS_CLASSES.strings);
     for (const str of strings) {
-      this.renderHorizontalString(str, svg.clientWidth, stringsGroup);
+      this.renderHorizontalString(str, width, stringsGroup);
     }
     svg.appendChild(stringsGroup);
 
     // Render frets (vertical lines spanning fretboard height)
     const fretsGroup = this.createGroup(CSS_CLASSES.frets);
     for (const fret of frets) {
-      this.renderHorizontalFret(fret, svg.clientHeight, fretsGroup);
+      this.renderHorizontalFret(fret, height, fretsGroup);
     }
     svg.appendChild(fretsGroup);
 
@@ -122,19 +124,21 @@ export class SvgRenderer {
     frets: Fret[],
     inlays: Inlay[],
     markers: MarkerInterface[],
-    svg: SVGSVGElement
+    svg: SVGSVGElement,
+    width: number,
+    height: number
   ): void {
     // Render strings (vertical lines spanning fretboard height)
     const stringsGroup = this.createGroup(CSS_CLASSES.strings);
     for (const str of strings) {
-      this.renderVerticalString(str, svg.clientHeight, stringsGroup);
+      this.renderVerticalString(str, height, stringsGroup);
     }
     svg.appendChild(stringsGroup);
 
     // Render frets (horizontal lines spanning fretboard width)
     const fretsGroup = this.createGroup(CSS_CLASSES.frets);
     for (const fret of frets) {
-      this.renderVerticalFret(fret, svg.clientWidth, fretsGroup);
+      this.renderVerticalFret(fret, width, fretsGroup);
     }
     svg.appendChild(fretsGroup);
 
