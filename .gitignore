@@ -37,3 +37,8 @@ coverage/
 # Misc
 *.pem
 .cache/
+
+
+# Vibe
+.vibe/
+.specify/
