@@ -20,7 +20,7 @@ A developer wants to display a standard 6-string guitar fretboard with 12 frets 
 **Acceptance Scenarios**:
 
 1. **Given** default configuration, **When** render() is called, **Then** SVG output displays 6 strings and 12 frets
-2. **Given** default configuration, **When** render() is called, **Then** inlay numbers 3, 5, 7, 9, 12 appear above the fretboard
+2. **Given** default configuration, **When** render() is called, **Then** inlay numbers 3, 5, 7, 9, 12 appear below the fretboard, centered on each fret
 3. **Given** default configuration, **When** getFretPosition(5) is called, **Then** returns valid x/y coordinates
 
 ---
@@ -37,7 +37,7 @@ A developer wants to customize the fretboard with different string count, fret c
 
 1. **Given** configuration with fretCount: 8, **When** render() is called, **Then** output displays exactly 8 frets
 2. **Given** configuration with stringCount: 4, **When** render() is called, **Then** output displays exactly 4 strings
-3. **Given** configuration with orientation: 'vertical', **When** render() is called, **Then** fretboard is rendered vertically with inlay numbers on the left side
+3. **Given** configuration with orientation: 'vertical', **When** render() is called, **Then** fretboard is rendered vertically with inlay numbers on the left side, centered on each fret
 4. **Given** configuration with stringSpacing: 25, fretSpacing: 40, **When** render() is called, **Then** visual spacing matches specified values
 
 ---
@@ -96,8 +96,10 @@ A developer needs to query positions on the fretboard to add custom markers in f
 - **FR-006**: Library MUST render frets with configurable thickness (default 1px)
 - **FR-007**: Library MUST use configurable spacing between strings (default 20px)
 - **FR-008**: Library MUST use configurable spacing between frets (default 30px)
-- **FR-009**: Library MUST position inlay numbers above fretboard for horizontal orientation
-- **FR-010**: Library MUST position inlay numbers on left side for vertical orientation
+- **FR-009**: Library MUST position inlay numbers **below** the fretboard for horizontal orientation, centered on each fret, within the SVG viewBox
+- **FR-010**: Library MUST position inlay numbers on the **left side** of the fretboard for vertical orientation, centered on each fret, within the SVG viewBox
+- **FR-011a**: Library MUST extend SVG viewBox to include inlay labels in the visible canvas
+- **FR-011b**: Library MUST center inlay text on the fret position (not at the fret start)
 - **FR-011**: Library MUST expose getFretPosition(fretIndex) method returning coordinates
 - **FR-012**: Library MUST expose getStringPosition(stringIndex) method returning coordinates
 - **FR-013**: Library MUST expose addMarker(fretIndex, stringIndex, options) method for future interactivity
@@ -135,6 +137,8 @@ A developer needs to query positions on the fretboard to add custom markers in f
 - String tuning follows standard guitar tuning (E-B-G-D-A-E from thinnest to thickest)
 - Tuning does not affect visual rendering in v1 (only string order matters)
 - Inlay positions are fixed at 3, 5, 7, 9, 12 (standard guitar markers)
+- Inlay numbers appear below the fretboard for horizontal orientation
+- Inlay numbers appear on the left side for vertical orientation
 - The nut (0th fret) is not rendered in v1
 - Left-handed orientation (mirrored) is out of scope for v1
 - Note names (E, F, F#) display is out of scope for v1

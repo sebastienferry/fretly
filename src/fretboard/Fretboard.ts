@@ -147,17 +147,32 @@ export class Fretboard {
   private initializeInlays(): void {
     this.inlays = [];
     const isHorizontal = this.options.orientation === 'horizontal';
+    const inlayOffset = 20; // Space for inlay numbers
 
     for (const fretNumber of this.options.inlayPositions) {
       if (fretNumber > this.options.fretCount) continue;
 
       if (isHorizontal) {
-        const x = getHorizontalFretX(fretNumber, this.options.fretSpacing);
-        const y = -20; // Above fretboard
-        this.inlays.push(new Inlay(fretNumber, x, y, 'above'));
+        // Horizontal: inlays below the fretboard, centered on the fret
+        const x = getHorizontalFretX(fretNumber, this.options.fretSpacing) + 
+                  this.options.fretThickness / 2;
+        const height = calculateHorizontalHeight(
+          this.options.stringCount,
+          this.options.stringSpacing,
+          this.options.stringThickness
+        );
+        const y = height + inlayOffset;
+        this.inlays.push(new Inlay(fretNumber, x, y, 'below'));
       } else {
-        const x = -20; // Left of fretboard
-        const y = getVerticalFretY(fretNumber, this.options.fretSpacing);
+        // Vertical: inlays left of the fretboard, centered on the fret
+        const width = calculateVerticalWidth(
+          this.options.stringCount,
+          this.options.stringSpacing,
+          this.options.stringThickness
+        );
+        const x = -inlayOffset;
+        const y = getVerticalFretY(fretNumber, this.options.fretSpacing) + 
+                  this.options.fretThickness / 2;
         this.inlays.push(new Inlay(fretNumber, x, y, 'left'));
       }
     }

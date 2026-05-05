@@ -117,5 +117,5 @@ export interface Inlay {
   /** Y coordinate for label */
   y: number;
   /** Position relative to fretboard */
-  position: 'above' | 'left';
+  position: 'below' | 'left';
 }

@@ -21,7 +21,7 @@ export class Inlay implements InlayInterface {
   readonly y: number;
   
   /** Position relative to fretboard */
-  readonly position: 'above' | 'left';
+  readonly position: 'below' | 'left';
 
   /**
    * Creates a new Inlay instance

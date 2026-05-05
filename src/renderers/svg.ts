@@ -35,18 +35,37 @@ export class SvgRenderer {
     markers: MarkerInterface[] = []
   ): SVGSVGElement {
     const isHorizontal = this.options.orientation === 'horizontal';
+    const inlayOffset = 20; // Space for inlay numbers
     
     // Calculate dimensions
-    const width = isHorizontal
+    let width = isHorizontal
       ? calculateHorizontalWidth(this.options.fretCount, this.options.fretSpacing)
       : calculateVerticalWidth(this.options.stringCount, this.options.stringSpacing, this.options.stringThickness);
     
-    const height = isHorizontal
+    let height = isHorizontal
       ? calculateHorizontalHeight(this.options.stringCount, this.options.stringSpacing, this.options.stringThickness)
       : calculateVerticalHeight(this.options.fretCount, this.options.fretSpacing);
 
-    // Create SVG element
-    const svg = this.createSvgElement(width, height);
+    // Adjust viewBox to include inlays
+    let viewBoxX = 0;
+    let viewBoxY = 0;
+    
+    if (!isHorizontal && this.options.showInlays) {
+      viewBoxX = -inlayOffset - 14; // Extend left for inlays
+      width += inlayOffset + 14; // Space for text + padding
+    }
+    if (isHorizontal && this.options.showInlays) {
+      viewBoxY = 0;
+      height += inlayOffset + 14; // Space for text + padding
+    }
+
+    // Create SVG element with adjusted viewBox
+    const svg = document.createElementNS(SVG_NS, 'svg');
+    svg.setAttribute('viewBox', `${viewBoxX} ${viewBoxY} ${width} ${height}`);
+    svg.setAttribute('width', String(width));
+    svg.setAttribute('height', String(height));
+    svg.setAttribute('class', CSS_CLASSES.root);
+    svg.setAttribute('xmlns', SVG_NS);
 
     // Render components
     if (isHorizontal) {
@@ -55,19 +74,6 @@ export class SvgRenderer {
       this.renderVertical(strings, frets, inlays, markers, svg, width, height);
     }
 
-    return svg;
-  }
-
-  /**
-   * Creates the root SVG element with viewBox
-   */
-  private createSvgElement(width: number, height: number): SVGSVGElement {
-    const svg = document.createElementNS(SVG_NS, 'svg');
-    svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
-    svg.setAttribute('width', String(width));
-    svg.setAttribute('height', String(height));
-    svg.setAttribute('class', CSS_CLASSES.root);
-    svg.setAttribute('xmlns', SVG_NS);
     return svg;
   }
 
