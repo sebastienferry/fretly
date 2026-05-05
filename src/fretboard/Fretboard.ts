@@ -119,7 +119,7 @@ export class Fretboard {
       this.strings.push(new String(
         i,
         position,
-        this.options.stringThickness,
+        this.options.stringThickness * (i + 1), // Vary thickness for visual effect
         this.options.stringCount
       ));
     }
@@ -127,12 +127,15 @@ export class Fretboard {
 
   /**
    * Creates fret objects with positions
+   * Note: We create fretCount + 1 frets to form a complete rectangle
+   * (e.g., 12 frets = 13 fret lines including start and end)
    */
   private initializeFrets(): void {
     this.frets = [];
     const isHorizontal = this.options.orientation === 'horizontal';
+    const totalFrets = this.options.fretCount + 1; // +1 for the end fret line
 
-    for (let i = 1; i <= this.options.fretCount; i++) {
+    for (let i = 1; i <= totalFrets; i++) {
       const position = isHorizontal
         ? getHorizontalFretX(i, this.options.fretSpacing)
         : getVerticalFretY(i, this.options.fretSpacing);
@@ -162,7 +165,7 @@ export class Fretboard {
           this.options.stringThickness
         );
         const y = height + inlayOffset;
-        this.inlays.push(new Inlay(fretNumber, x, y, 'below'));
+        this.inlays.push(new Inlay(fretNumber, x + this.options.fretSpacing/2, y, 'below'));
       } else {
         // Vertical: inlays left of the fretboard, centered on the fret
         const width = calculateVerticalWidth(

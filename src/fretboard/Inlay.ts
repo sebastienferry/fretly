@@ -28,14 +28,14 @@ export class Inlay implements InlayInterface {
    * @param fretNumber - The fret number to display
    * @param x - X coordinate for label
    * @param y - Y coordinate for label
-   * @param position - Position relative to fretboard ('above' or 'left')
+   * @param position - Position relative to fretboard ('below' or 'left')
    * @param label - Optional custom label (defaults to fretNumber)
    */
   constructor(
     fretNumber: number,
     x: number,
     y: number,
-    position: 'above' | 'left',
+    position: 'below' | 'left',
     label?: string
   ) {
     this.fretNumber = fretNumber;

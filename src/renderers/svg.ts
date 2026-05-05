@@ -36,6 +36,7 @@ export class SvgRenderer {
   ): SVGSVGElement {
     const isHorizontal = this.options.orientation === 'horizontal';
     const inlayOffset = 20; // Space for inlay numbers
+    const padding = 10 + this.options.fretThickness; // Padding around diagram
     
     // Calculate dimensions
     let width = isHorizontal
@@ -46,17 +47,23 @@ export class SvgRenderer {
       ? calculateHorizontalHeight(this.options.stringCount, this.options.stringSpacing, this.options.stringThickness)
       : calculateVerticalHeight(this.options.fretCount, this.options.fretSpacing);
 
-    // Adjust viewBox to include inlays
+    // Adjust viewBox to include inlays and padding
     let viewBoxX = 0;
     let viewBoxY = 0;
     
+    // Add padding on all sides
+    viewBoxX = -padding;
+    viewBoxY = -padding;
+    width += padding * 2;
+    height += padding * 2;
+    
+    // Additional adjustments for inlays
     if (!isHorizontal && this.options.showInlays) {
-      viewBoxX = -inlayOffset - 14; // Extend left for inlays
-      width += inlayOffset + 14; // Space for text + padding
+      viewBoxX -= inlayOffset; // Extend left for inlays
+      width += inlayOffset; // Space for text
     }
     if (isHorizontal && this.options.showInlays) {
-      viewBoxY = 0;
-      height += inlayOffset + 14; // Space for text + padding
+      height += inlayOffset; // Space for text below
     }
 
     // Create SVG element with adjusted viewBox
@@ -99,7 +106,7 @@ export class SvgRenderer {
     // Render frets (vertical lines spanning fretboard height)
     const fretsGroup = this.createGroup(CSS_CLASSES.frets);
     for (const fret of frets) {
-      this.renderHorizontalFret(fret, height, fretsGroup);
+      this.renderHorizontalFret(fret, this.options.stringCount, this.options.stringSpacing, this.options.stringThickness, fretsGroup);
     }
     svg.appendChild(fretsGroup);
 
@@ -144,7 +151,7 @@ export class SvgRenderer {
     // Render frets (horizontal lines spanning fretboard width)
     const fretsGroup = this.createGroup(CSS_CLASSES.frets);
     for (const fret of frets) {
-      this.renderVerticalFret(fret, width, fretsGroup);
+      this.renderVerticalFret(fret, this.options.stringCount, this.options.stringSpacing, this.options.stringThickness, fretsGroup);
     }
     svg.appendChild(fretsGroup);
 
@@ -193,13 +200,20 @@ export class SvgRenderer {
 
   /**
    * Renders a fret in horizontal orientation
+   * Frets span from first string to last string
    */
-  private renderHorizontalFret(fret: Fret, height: number, group: SVGElement): void {
+  private renderHorizontalFret(fret: Fret, stringCount: number, stringSpacing: number, stringThickness: number, group: SVGElement): void {
     const line = document.createElementNS(SVG_NS, 'line');
-    line.setAttribute('x1', String(fret.x + fret.thickness / 2));
-    line.setAttribute('y1', '0');
-    line.setAttribute('x2', String(fret.x + fret.thickness / 2));
-    line.setAttribute('y2', String(height));
+    // Fret line is vertical, centered on fret position
+    const x = fret.x + fret.thickness / 2;
+    // Spans from first string to last string
+    const y1 = 0;
+    const y2 = stringSpacing * (stringCount - 1) + stringThickness;
+    
+    line.setAttribute('x1', String(x));
+    line.setAttribute('y1', String(y1));
+    line.setAttribute('x2', String(x));
+    line.setAttribute('y2', String(y2));
     line.setAttribute('stroke', '#000000');
     line.setAttribute('stroke-width', String(fret.thickness));
     line.setAttribute('class', CSS_CLASSES.fret(fret.index));
@@ -240,13 +254,20 @@ export class SvgRenderer {
 
   /**
    * Renders a fret in vertical orientation
+   * Frets span from first string to last string
    */
-  private renderVerticalFret(fret: Fret, width: number, group: SVGElement): void {
+  private renderVerticalFret(fret: Fret, stringCount: number, stringSpacing: number, stringThickness: number, group: SVGElement): void {
     const line = document.createElementNS(SVG_NS, 'line');
-    line.setAttribute('x1', '0');
-    line.setAttribute('y1', String(fret.y + fret.thickness / 2));
-    line.setAttribute('x2', String(width));
-    line.setAttribute('y2', String(fret.y + fret.thickness / 2));
+    // Fret line is horizontal, centered on fret position
+    const y = fret.y + fret.thickness / 2;
+    // Spans from first string to last string
+    const x1 = 0;
+    const x2 = stringSpacing * (stringCount - 1) + stringThickness;
+    
+    line.setAttribute('x1', String(x1));
+    line.setAttribute('y1', String(y));
+    line.setAttribute('x2', String(x2));
+    line.setAttribute('y2', String(y));
     line.setAttribute('stroke', '#000000');
     line.setAttribute('stroke-width', String(fret.thickness));
     line.setAttribute('class', CSS_CLASSES.fret(fret.index));
