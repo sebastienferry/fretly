@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Debug Fretboard</title>
+  <style>
+    body { font-family: sans-serif; padding: 40px; background: #f0f0f0; }
+    svg { background: white; border: 2px solid red; display: block; }
+    line { stroke: red !important; stroke-width: 3px !important; }
+    text { fill: red !important; }
+  </style>
+</head>
+<body>
+  <h1>Debug Fretboard Rendering</h1>
+  <div id="output"></div>
+  <div id="fretboard"></div>
+  
+  <script src="./dist/index.umd.js"></script>
+  <script>
+    console.log('fretly:', typeof fretly);
+    console.log('Fretboard:', typeof fretly?.Fretboard);
+    
+    if (fretly && fretly.Fretboard) {
+      try {
+        const f = new fretly.Fretboard({ fretCount: 6, stringCount: 4 });
+        const svg = f.render();
+        
+        document.getElementById('fretboard').appendChild(svg);
+        
+        // Log SVG details
+        console.log('SVG viewBox:', svg.getAttribute('viewBox'));
+        console.log('SVG width:', svg.getAttribute('width'));
+        console.log('SVG height:', svg.getAttribute('height'));
+        console.log('SVG children:', svg.children.length);
+        
+        // List all elements
+        const lines = svg.querySelectorAll('line');
+        const texts = svg.querySelectorAll('text');
+        console.log('Lines:', lines.length);
+        console.log('Texts:', texts.length);
+        
+        if (lines.length > 0) {
+          console.log('First line:', {
+            x1: lines[0].getAttribute('x1'),
+            y1: lines[0].getAttribute('y1'),
+            x2: lines[0].getAttribute('x2'),
+            y2: lines[0].getAttribute('y2'),
+            stroke: lines[0].getAttribute('stroke'),
+            width: lines[0].getAttribute('stroke-width')
+          });
+        }
+        
+        document.getElementById('output').innerHTML = 
+          `<p>✅ Library loaded</p>` +
+          `<p>Lines: ${lines.length}, Texts: ${texts.length}</p>` +
+          `<p>viewBox: ${svg.getAttribute('viewBox')}</p>`;
+      } catch (e) {
+        console.error('Error:', e);
+        document.getElementById('output').innerHTML = 
+          `<p style="color: red;">❌ Error: ${e.message}</p>`;
+      }
+    } else {
+      console.error('fretly not loaded!');
+      document.getElementById('output').innerHTML = 
+        `<p style="color: red;">❌ fretly global not found</p>`;
+    }
+  </script>
+</body>
+</html>
