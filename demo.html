@@ -177,13 +177,13 @@
       </div>
     </div>
     <pre>// Bass
-new Fretboard({ fretCount: 24, stringCount: 4, fretSpacing: 35 });
+new Fretboard({ fretCount: 12, stringCount: 4, fretSpacing: 35 });
 
 // 7-string
-new Fretboard({ fretCount: 24, stringCount: 7 });
+new Fretboard({ fretCount: 12, stringCount: 7 });
 
 // 8-string
-new Fretboard({ fretCount: 24, stringCount: 8, stringSpacing: 18 });</pre>
+new Fretboard({ fretCount: 12, stringCount: 8, stringSpacing: 18 });</pre>
   </div>
 
   <!-- Demo 4: Vertical Orientation -->
@@ -293,7 +293,7 @@ fretboard.addMarker(5, 2, { color: 'red', size: 8 });</pre>
 
     // Demo 3: Different instruments
     const bassFretboard = new Fretboard({
-      fretCount: 24,
+      fretCount: 12,
       stringCount: 4,
       stringSpacing: 25,
       stringThickness: 3,
@@ -302,14 +302,14 @@ fretboard.addMarker(5, 2, { color: 'red', size: 8 });</pre>
     document.getElementById('fretboard-bass').appendChild(bassFretboard.render());
 
     const sevenStringFretboard = new Fretboard({
-      fretCount: 24,
+      fretCount: 12,
       stringCount: 7,
       stringSpacing: 18
     });
     document.getElementById('fretboard-7string').appendChild(sevenStringFretboard.render());
 
     const eightStringFretboard = new Fretboard({
-      fretCount: 24,
+      fretCount: 12,
       stringCount: 8,
       stringSpacing: 16,
       fretSpacing: 30

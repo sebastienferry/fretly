@@ -6,6 +6,18 @@ import type { Position } from '../fretboard/types';
 
 /**
  * Calculate total width of fretboard in horizontal orientation
+ * 
+ * Computes the total width needed to display all frets horizontally.
+ * Width is determined by fret count multiplied by fret spacing.
+ * 
+ * @param fretCount - Number of frets on the fretboard
+ * @param fretSpacing - Pixel spacing between fret lines
+ * @returns number - Total width in pixels
+ * 
+ * @example
+ * ```typescript
+ * const width = calculateHorizontalWidth(12, 60); // 720px for 12 frets at 60px spacing
+ * ```
  */
 export function calculateHorizontalWidth(
   fretCount: number,
@@ -22,6 +34,19 @@ export function calculateHorizontalWidth(
 
 /**
  * Calculate total height of fretboard in horizontal orientation
+ * 
+ * Computes the total height needed to display all strings vertically in horizontal orientation.
+ * Height is determined by string count, spacing, and thickness.
+ * 
+ * @param stringCount - Number of strings on the fretboard
+ * @param stringSpacing - Pixel spacing between string lines
+ * @param stringThickness - Visual thickness of strings in pixels
+ * @returns number - Total height in pixels
+ * 
+ * @example
+ * ```typescript
+ * const height = calculateHorizontalHeight(6, 30, 1); // 151px for 6 strings at 30px spacing
+ * ```
  */
 export function calculateHorizontalHeight(
   stringCount: number,
@@ -35,6 +60,19 @@ export function calculateHorizontalHeight(
 
 /**
  * Calculate total width of fretboard in vertical orientation
+ * 
+ * Computes the total width needed to display all strings horizontally in vertical orientation.
+ * Width is determined by string count, spacing, and thickness.
+ * 
+ * @param stringCount - Number of strings on the fretboard
+ * @param stringSpacing - Pixel spacing between string lines
+ * @param stringThickness - Visual thickness of strings in pixels
+ * @returns number - Total width in pixels
+ * 
+ * @example
+ * ```typescript
+ * const width = calculateVerticalWidth(6, 30, 1); // 151px for 6 strings at 30px spacing
+ * ```
  */
 export function calculateVerticalWidth(
   stringCount: number,
@@ -47,6 +85,18 @@ export function calculateVerticalWidth(
 
 /**
  * Calculate total height of fretboard in vertical orientation
+ * 
+ * Computes the total height needed to display all frets vertically in vertical orientation.
+ * Height is determined by fret count multiplied by fret spacing.
+ * 
+ * @param fretCount - Number of frets on the fretboard
+ * @param fretSpacing - Pixel spacing between fret lines
+ * @returns number - Total height in pixels
+ * 
+ * @example
+ * ```typescript
+ * const height = calculateVerticalHeight(24, 40); // 960px for 24 frets at 40px spacing
+ * ```
  */
 export function calculateVerticalHeight(
   fretCount: number,
@@ -57,8 +107,20 @@ export function calculateVerticalHeight(
 
 /**
  * Get string Y position for horizontal orientation
- * String 0 (high E) is at top (y=0)
- * String N (low E) is at bottom
+ * 
+ * In horizontal orientation, strings are displayed top-to-bottom with the highest-pitched
+ * string (high E) at the top and lowest-pitched string (low E) at the bottom.
+ * 
+ * @param stringIndex - Zero-based index of the string (0 = high E, N-1 = low E)
+ * @param stringSpacing - Pixel spacing between strings
+ * @returns number - The Y coordinate for the string in horizontal orientation
+ * 
+ * @example
+ * ```typescript
+ * // For a 6-string guitar in horizontal orientation
+ * const highE_Y = getHorizontalStringY(0, 20); // 0 (topmost)
+ * const lowE_Y = getHorizontalStringY(5, 20); // 100 (bottommost)
+ * ```
  */
 export function getHorizontalStringY(
   stringIndex: number,
@@ -69,14 +131,30 @@ export function getHorizontalStringY(
 
 /**
  * Get string X position for vertical orientation
- * String 0 (high E) is at left (x=0)
- * String N (low E) is at right
+ * 
+ * In vertical orientation, strings are displayed left-to-right with the lowest-pitched
+ * string (low E) on the left and highest-pitched string (high E) on the right, matching
+ * the standard guitar neck layout when viewed vertically.
+ * 
+ * @param stringIndex - Zero-based index of the string (0 = high E, N-1 = low E)
+ * @param stringSpacing - Pixel spacing between strings
+ * @param stringCount - Total number of strings
+ * @returns number - The X coordinate for the string in vertical orientation
+ * 
+ * @example
+ * ```typescript
+ * // For a 6-string guitar in vertical orientation
+ * const lowE_X = getVerticalStringX(5, 20, 6); // 0 (leftmost)
+ * const highE_X = getVerticalStringX(0, 20, 6); // 100 (rightmost)
+ * ```
  */
 export function getVerticalStringX(
   stringIndex: number,
-  stringSpacing: number
+  stringSpacing: number,
+  stringCount: number
 ): number {
-  return stringIndex * stringSpacing;
+  // Reverse the order: low E (highest index) on left, high E (index 0) on right
+  return (stringCount - 1 - stringIndex) * stringSpacing;
 }
 
 /**
@@ -167,10 +245,11 @@ export function getVerticalMarkerPosition(
   fretIndex: number,
   stringIndex: number,
   fretSpacing: number,
-  stringSpacing: number
+  stringSpacing: number,
+  stringCount: number
 ): Position {
   return {
-    x: getVerticalStringX(stringIndex, stringSpacing),
+    x: getVerticalStringX(stringIndex, stringSpacing, stringCount),
     y: getVerticalFretY(fretIndex, fretSpacing)
   };
 }
@@ -226,11 +305,12 @@ export function getHorizontalStringPosition(
 export function getVerticalStringPosition(
   stringIndex: number,
   stringSpacing: number,
-  height: number
+  height: number,
+  stringCount: number
 ): Position {
   // String spans full height of fretboard
   return {
-    x: getVerticalStringX(stringIndex, stringSpacing),
+    x: getVerticalStringX(stringIndex, stringSpacing, stringCount),
     y: 0
   };
 }
