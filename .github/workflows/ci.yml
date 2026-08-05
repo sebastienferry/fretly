@@ -2,7 +2,6 @@ name: CI
 
 on:
   push:
-    branches: [ main, 001-fretboard-renderer, 002-fretboard-fingering ]
   pull_request:
 
 jobs:
