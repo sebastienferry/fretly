@@ -19,3 +19,10 @@ export interface ChordDefinition {
   instrument?: string;
   fingerings: MusicFingering[];
 }
+
+export interface ScaleDefinition {
+  name: string;
+  key: string;
+  type: string;
+  intervals: number[];
+}

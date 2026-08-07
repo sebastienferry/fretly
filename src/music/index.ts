@@ -2,7 +2,7 @@
  * Standalone FretlyMusic Catalog Entry Point
  */
 
-import { ChordDefinition } from './types';
+import { ChordDefinition, ScaleDefinition } from './types';
 
 export const CHORD_CATALOG: ChordDefinition[] = [
   // C Chords
@@ -363,6 +363,69 @@ export const CHORD_CATALOG: ChordDefinition[] = [
       { string: 5, fret: 2, text: "B", isRoot: true, finger: 1 },
       { string: 6, fret: -1, text: "X" }
     ]
+  },
+  // Diminished (dim)
+  {
+    name: "C Diminished",
+    key: "Cdim",
+    suffix: "dim",
+    instrument: "guitar-6string",
+    fingerings: [
+      { string: 1, fret: 2, text: "F#", finger: 3 },
+      { string: 2, fret: 1, text: "C", isRoot: true, finger: 1 },
+      { string: 3, fret: 2, text: "A", finger: 4 },
+      { string: 4, fret: 1, text: "D#", finger: 2 },
+      { string: 5, fret: -1, text: "X" },
+      { string: 6, fret: -1, text: "X" }
+    ]
+  },
+  // Half-Diminished / 7b5
+  {
+    name: "C Half-Diminished",
+    key: "C7b5",
+    suffix: "7b5",
+    instrument: "guitar-6string",
+    fingerings: [
+      { string: 1, fret: -1, text: "X" },
+      { string: 2, fret: 4, text: "D#", finger: 3 },
+      { string: 3, fret: 3, text: "A#", finger: 2 },
+      { string: 4, fret: 4, text: "F#", finger: 4 },
+      { string: 5, fret: 3, text: "C", isRoot: true, finger: 1 },
+      { string: 6, fret: -1, text: "X" }
+    ]
+  }
+];
+
+export const SCALE_CATALOG: ScaleDefinition[] = [
+  {
+    name: "Major",
+    key: "major",
+    type: "major",
+    intervals: [0, 2, 4, 5, 7, 9, 11]
+  },
+  {
+    name: "Minor Naturelle",
+    key: "minor-naturelle",
+    type: "minor-naturelle",
+    intervals: [0, 2, 3, 5, 7, 8, 10]
+  },
+  {
+    name: "Minor Harmonique",
+    key: "minor-harmonic",
+    type: "minor-harmonic",
+    intervals: [0, 2, 3, 5, 7, 8, 11]
+  },
+  {
+    name: "Pentatonic Major",
+    key: "pentatonic",
+    type: "pentatonic",
+    intervals: [0, 2, 4, 7, 9]
+  },
+  {
+    name: "Pentatonic Minor",
+    key: "pentatonic-minor",
+    type: "pentatonic-minor",
+    intervals: [0, 3, 5, 7, 10]
   }
 ];
 
@@ -380,9 +443,9 @@ const ENHARMONIC_ALIASES: Record<string, string> = {
 };
 
 /**
- * Returns a chord definition by key or name (e.g. 'C', 'Am', 'G', 'Fmaj7', 'E7', 'Db', 'Bb')
+ * Returns a chord definition by key or name (e.g. 'C', 'Am', 'G', 'Fmaj7', 'E7', 'Cdim', 'C7b5')
  * 
- * @param keyOrName - Key identifier (e.g. 'Am', 'Bb') or full name (e.g. 'A Minor')
+ * @param keyOrName - Key identifier or full name
  * @returns ChordDefinition or undefined if not found
  */
 export function getChord(keyOrName: string): ChordDefinition | undefined {
@@ -403,4 +466,20 @@ export function listChords(): ChordDefinition[] {
   return [...CHORD_CATALOG];
 }
 
-export type { ChordDefinition, MusicFingering } from './types';
+/**
+ * Returns a scale definition by key or type (e.g. 'major', 'minor-naturelle', 'minor-harmonic', 'pentatonic')
+ */
+export function getScale(typeOrName: string): ScaleDefinition | undefined {
+  if (!typeOrName || typeOrName.trim() === '') return undefined;
+  const search = typeOrName.trim().toLowerCase();
+  return SCALE_CATALOG.find(s => s.key.toLowerCase() === search || s.name.toLowerCase() === search || s.type.toLowerCase() === search);
+}
+
+/**
+ * Returns all available scale definitions in the catalog
+ */
+export function listScales(): ScaleDefinition[] {
+  return [...SCALE_CATALOG];
+}
+
+export type { ChordDefinition, MusicFingering, ScaleDefinition } from './types';

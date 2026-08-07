@@ -558,11 +558,11 @@
         <h3 class="form-section-title">Type</h3>
         <div class="radio-group">
           <label class="radio-option">
-            <input type="radio" name="type" value="chord" checked onchange="updatePreview()">
+            <input type="radio" name="type" value="chord" checked onchange="onTypeChange()">
             <span>Chord</span>
           </label>
           <label class="radio-option">
-            <input type="radio" name="type" value="scale" onchange="updatePreview()">
+            <input type="radio" name="type" value="scale" onchange="onTypeChange()">
             <span>Scale</span>
           </label>
         </div>
@@ -571,12 +571,14 @@
       <div class="form-section">
         <h3 class="form-section-title">Category</h3>
         <div class="select-wrapper">
-          <label class="select-label">Chord/Scale Category</label>
+          <label class="select-label" id="categoryLabel">Chord Category</label>
           <select id="category" onchange="updatePreview()">
-            <option value="major">Major</option>
-            <option value="minor">Minor</option>
-            <option value="pentatonic">Pentatonic</option>
-            <option value="blues">Blues</option>
+            <option value="major">Major (maj)</option>
+            <option value="minor">Minor (min)</option>
+            <option value="dim">Diminished (dim)</option>
+            <option value="maj7">Major 7 (MAJ7)</option>
+            <option value="7">Dominant 7 (7)</option>
+            <option value="7b5">Half-Diminished (7b5)</option>
           </select>
         </div>
       </div>
@@ -912,6 +914,33 @@
 
     // Initialize
     function init() {
+      updatePreview();
+    }
+
+    function onTypeChange() {
+      const type = document.querySelector('input[name="type"]:checked').value;
+      const categorySelect = document.getElementById('category');
+      const categoryLabel = document.getElementById('categoryLabel');
+
+      if (type === 'chord') {
+        categoryLabel.textContent = 'Chord Type';
+        categorySelect.innerHTML = `
+          <option value="major" selected>Major (maj)</option>
+          <option value="minor">Minor (min)</option>
+          <option value="dim">Diminished (dim)</option>
+          <option value="maj7">Major 7 (MAJ7)</option>
+          <option value="7">Dominant 7 (7)</option>
+          <option value="7b5">Half-Diminished (7b5)</option>
+        `;
+      } else {
+        categoryLabel.textContent = 'Scale Type';
+        categorySelect.innerHTML = `
+          <option value="pentatonic" selected>Pentatonic</option>
+          <option value="major">Major</option>
+          <option value="minor-naturelle">Minor Naturelle</option>
+          <option value="minor-harmonic">Minor Harmonic</option>
+        `;
+      }
       updatePreview();
     }
 
