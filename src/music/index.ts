@@ -366,16 +366,34 @@ export const CHORD_CATALOG: ChordDefinition[] = [
   }
 ];
 
+const ENHARMONIC_ALIASES: Record<string, string> = {
+  'db': 'C#',
+  'eb': 'D#',
+  'gb': 'F#',
+  'ab': 'G#',
+  'bb': 'A#',
+  'dbm': 'C#m',
+  'ebm': 'D#m',
+  'gbm': 'F#m',
+  'abm': 'G#m',
+  'bbm': 'A#m'
+};
+
 /**
- * Returns a chord definition by key or name (e.g. 'C', 'Am', 'G', 'Fmaj7', 'E7')
+ * Returns a chord definition by key or name (e.g. 'C', 'Am', 'G', 'Fmaj7', 'E7', 'Db', 'Bb')
  * 
- * @param keyOrName - Key identifier (e.g. 'Am') or full name (e.g. 'A Minor')
+ * @param keyOrName - Key identifier (e.g. 'Am', 'Bb') or full name (e.g. 'A Minor')
  * @returns ChordDefinition or undefined if not found
  */
 export function getChord(keyOrName: string): ChordDefinition | undefined {
   if (!keyOrName || keyOrName.trim() === '') return undefined;
   const search = keyOrName.trim().toLowerCase();
-  return CHORD_CATALOG.find(c => c.key.toLowerCase() === search || c.name.toLowerCase() === search);
+  
+  const mappedKey = ENHARMONIC_ALIASES[search] || search;
+  const match = CHORD_CATALOG.find(c => c.key.toLowerCase() === search || c.name.toLowerCase() === search);
+  if (match) return match;
+
+  return CHORD_CATALOG.find(c => c.key.toLowerCase() === mappedKey.toLowerCase());
 }
 
 /**
