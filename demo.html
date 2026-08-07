@@ -306,6 +306,24 @@
           </div>
         </div>
       </div>
+    <!-- Example 6: Standalone Music Catalog (FretlyMusic) -->
+    <div class="demo-card">
+      <div class="demo-card-header">
+        <h2 class="demo-card-title">6. Decoupled Music Catalog (FretlyMusic)</h2>
+        <p class="demo-card-desc">Query real chord definitions independently from the standalone <code>FretlyMusic</code> catalog library (<code>dist/music.umd.js</code>) and pass them to <code>Fretboard</code>.</p>
+      </div>
+      <div class="demo-card-body">
+        <div class="vertical-grid">
+          <div class="vertical-card">
+            <span class="vertical-card-title">Fmaj7 (from FretlyMusic)</span>
+            <div id="demo-catalog-fmaj7"></div>
+          </div>
+          <div class="vertical-card">
+            <span class="vertical-card-title">E7 (from FretlyMusic)</span>
+            <div id="demo-catalog-e7"></div>
+          </div>
+        </div>
+      </div>
     </div>
   </main>
 
@@ -313,8 +331,9 @@
     <p>Released under the MIT License • View on <a href="https://github.com/sebastienferry/fretly" target="_blank" rel="noopener">GitHub</a></p>
   </footer>
 
-  <!-- Include Fretly UMD Library Bundle -->
+  <!-- Include Fretly UMD Library Bundle & Decoupled FretlyMusic Catalog Bundle -->
   <script src="./dist/index.umd.js"></script>
+  <script src="./dist/music.umd.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const fretlyLib = window.fretly || window.Fretly;
@@ -460,6 +479,35 @@
         ]
       });
       document.getElementById('demo-title-left').appendChild(titleLeft.render());
+
+      // 6. Standalone Music Catalog (FretlyMusic)
+      if (window.FretlyMusic && window.FretlyMusic.getChord) {
+        const fmaj7Data = window.FretlyMusic.getChord('Fmaj7');
+        if (fmaj7Data) {
+          const catalogFmaj7 = new fretlyLib.Fretboard({
+            title: fmaj7Data.name,
+            stringCount: 6,
+            fretCount: 4,
+            orientation: 'vertical',
+            tuning: ['E', 'A', 'D', 'G', 'B', 'E'],
+            fingerings: fmaj7Data.fingerings
+          });
+          document.getElementById('demo-catalog-fmaj7').appendChild(catalogFmaj7.render());
+        }
+
+        const e7Data = window.FretlyMusic.getChord('E7');
+        if (e7Data) {
+          const catalogE7 = new fretlyLib.Fretboard({
+            title: e7Data.name,
+            stringCount: 6,
+            fretCount: 4,
+            orientation: 'vertical',
+            tuning: ['E', 'A', 'D', 'G', 'B', 'E'],
+            fingerings: e7Data.fingerings
+          });
+          document.getElementById('demo-catalog-e7').appendChild(catalogE7.render());
+        }
+      }
     });
   </script>
 </body>
