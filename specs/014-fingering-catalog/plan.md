@@ -1,26 +1,27 @@
-# Implementation Plan: Real Fingering Catalog
+# Implementation Plan: Decoupled Music Catalog
 
 **Branch**: `feat/018-fingering-catalog` | **Date**: 2026-08-07 | **Spec**: [spec.md](spec.md)
 
 ## Summary
 
-Create JSON chord catalog files under `src/catalog/chords.json` containing comprehensive 6-string guitar chord definitions (open, barre, 7ths, suspended, diminished). Export `getChord()`, `listChords()`, and `ChordDefinition` interface from `src/catalog/index.ts` and main index.
+Create a completely decoupled, independent music catalog module under `src/music/` (`FretlyMusic`). Core `Fretboard` renderer has ZERO dependencies on `src/music/`. Client HTML pages can include both scripts independently.
 
 ## Technical Context
 
 **Files to create/modify**:
-- `src/catalog/chords.json` — JSON catalog dataset for chords
-- `src/catalog/types.ts` — `ChordDefinition`, `CatalogFingering` interfaces
-- `src/catalog/index.ts` — `getChord()`, `listChords()` catalog utilities
-- `src/index.ts` — re-export catalog functions and types
-- `tests/unit/Catalog.test.ts` — unit tests
+- `src/music/chords.json` — Decoupled JSON chord catalog
+- `src/music/types.ts` — Catalog types (`ChordDefinition`, `MusicFingering`)
+- `src/music/index.ts` — `FretlyMusic` export (`getChord`, `listChords`)
+- `rollup.config.js` — Output `dist/music.umd.js` alongside core engine
+- `tests/unit/MusicCatalog.test.ts` — Independent unit tests
 
 ## Project Structure
 
 ```text
 src/
-├── catalog/
-│   ├── chords.json       # JSON chord catalog definitions
-│   ├── types.ts          # Catalog interfaces
-│   └── index.ts          # Catalog lookup utilities
+├── music/               # Standalone Music Catalog Module
+│   ├── chords.json      # Decoupled chord definitions
+│   ├── types.ts         # Chord interfaces
+│   └── index.ts         # FretlyMusic catalog entry point
+├── fretboard/           # Core Fretboard Engine (0 dependency on music/)
 ```
